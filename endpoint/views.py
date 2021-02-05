@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from .serializer import ImageSerializer
 from .face import DetectFaceEmotions
+from .emotions import emotions
 
 # Create your views here.
 @api_view(["POST"])
@@ -29,7 +30,7 @@ def UploadFace(request):
 
         return Response(
             {
-                "emotions": faceEmotions.as_dict(),
+                "emotions": emotions(faceEmotions.as_dict()),
                 "image": serializerUpload.data["image"],
                 "name": serializerUpload.data["name"],
             },
