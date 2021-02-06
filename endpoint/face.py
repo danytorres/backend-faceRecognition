@@ -5,10 +5,10 @@ from azure.cognitiveservices.vision.face.models import TrainingStatusType, Perso
 from backpython.settings import FILES_ROOT
 
 # This key will serve all examples in this document.
-KEY = "3d7dbe5381d04035b5c322b6d3260e82"
+KEY = "<Key endPoint>"
 
 # This endpoint will be used in all examples in this quickstart.
-ENDPOINT = "https://djangotaskpruebadany.cognitiveservices.azure.com/"
+ENDPOINT = "<Url endPoint>"
 
 
 def DetectFaceEmotions(imageName, imageUrl):
