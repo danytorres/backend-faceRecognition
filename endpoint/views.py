@@ -5,6 +5,9 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from .serializer import ImageSerializer
 from .face import DetectFaceEmotions
 from .emotions import emotions
+from .models import Image
+from backpython.settings import FILES_ROOT
+import os
 
 # Create your views here.
 @api_view(["POST"])
@@ -24,9 +27,12 @@ def UploadFace(request):
         serializerUpload.save()
 
         faceEmotions = DetectFaceEmotions(
-            imageUrl=serializerUpload.data["image"],
-            imageName=serializerUpload.data["name"],
+            imageUrl=serializerUpload.data["image"]
         )
+
+
+        if faceEmotions == 1:
+            return Response("No se encontro una cara", status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
         return Response(
             {
@@ -37,3 +43,11 @@ def UploadFace(request):
             status=status.HTTP_200_OK,
         )
     return Response(serializerUpload.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["DELETE"])
+def DeleteFace(request):
+    b = Image.objects.get()
+    file = FILES_ROOT+"/uploads/"+str(b.image)
+    os.remove(file)
+    b.delete()
+    return Response('Se elimino la imagen', status=status.HTTP_200_OK)

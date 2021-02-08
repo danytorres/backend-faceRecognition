@@ -10,16 +10,25 @@ KEY = "<Key endPoint>"
 # This endpoint will be used in all examples in this quickstart.
 ENDPOINT = "<Url endPoint>"
 
+# Convert width height to a point in a rectangle
+def getRectangle(faceDictionary):
+    rect = faceDictionary.face_rectangle
+    left = rect.left
+    top = rect.top
+    right = left + rect.width
+    bottom = top + rect.height
 
-def DetectFaceEmotions(imageName, imageUrl):
+    return ((left, top), (right, bottom))
+
+def DetectFaceEmotions(imageUrl):
 
     # Create an authenticated FaceClient.
     face_client = FaceClient(ENDPOINT, CognitiveServicesCredentials(KEY))
 
     # Detect a face in an image that contains a single face
     fileURL = FILES_ROOT + imageUrl
-    single_face_image = open(fileURL, "rb")
-    single_image_name = imageName
+    single_face_image = open(fileURL, "rb") # Abre la imagen y la lee en formato binario
+    # single_image_name = imageName
     # We use detection model 3 to get better performance.
     detected_faces = face_client.face.detect_with_stream(
         image=single_face_image,
@@ -28,23 +37,14 @@ def DetectFaceEmotions(imageName, imageUrl):
     )
 
     if not detected_faces:
-        raise Exception("No face detected from image {}".format(single_image_name))
-
-    # Convert width height to a point in a rectangle
-    def getRectangle(faceDictionary):
-        rect = faceDictionary.face_rectangle
-        left = rect.left
-        top = rect.top
-        right = left + rect.width
-        bottom = top + rect.height
-
-        return ((left, top), (right, bottom))
+        # raise Exception("No face detected from image {}".format(single_image_name))
+        return 1
 
     # Download the image from the url
     img = Image.open(single_face_image)
 
     # For each face returned use the face rectangle and draw a red box.
-    print("Drawing rectangle around face... see popup for results.")
+    # print("Drawing rectangle around face... see popup for results.")
     draw = ImageDraw.Draw(img)
     for face in detected_faces:
         faceEmotions = face.face_attributes.emotion
